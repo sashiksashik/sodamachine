@@ -12,7 +12,7 @@ namespace SodaMachine
     public class Wallet
     {
 
-        private List<Coin> coins;
+        private Dictionary<uint,uint> coins;
         /// <summary>
         /// Initialize wallet
         /// </summary>
@@ -22,35 +22,31 @@ namespace SodaMachine
         /// <param name="cent50Count">50 cent pcs</param>
         public Wallet(uint centCount, uint cent5Count, uint cent25Count, uint cent50Count)
         {
-            coins = new List<Coin>();
-            coins.Add(new Coin(1, centCount));
-            coins.Add(new Coin(5, cent5Count));
-            coins.Add(new Coin(25, cent25Count));
-            coins.Add(new Coin(50, cent50Count));
+            coins = new Dictionary<uint, uint>();
+            coins.Add(1, centCount);
+            coins.Add(5, cent5Count);
+            coins.Add(25, cent25Count);
+            coins.Add(50, cent50Count);
         }
         /// <summary>
         /// Calculate coins amount in wallet
         /// </summary>
         /// <returns>Coins amount</returns>
-        public uint getAmount()
+        public int getAmount()
         {
             uint amount = 0;
-            coins.ForEach(coin => amount += coin.nominal * coin.count);
-            return amount;
+            var enumerator = coins.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                amount+=enumerator.Current.Value*enumerator.Current.Key;
+            }
+            return (int)amount;
         }
-    }
-    /// <summary>
-    /// Represents coin in wallet
-    /// </summary>
-    public class Coin
-    {
-        public uint nominal { get; }
-        public uint count { get; set; }
-        public Coin() { }
-        public Coin(uint nominal, uint count)
+
+        public bool hasAmount(uint amount)
         {
-            this.nominal = nominal;
-            this.count = count;
+            if (amount < +getAmount()) return true; else return false;
         }
     }
+    
 }

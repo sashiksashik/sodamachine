@@ -92,10 +92,18 @@ namespace SodaMachine
             return str.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Coins in wallet</returns>
         public Dictionary<uint, uint> getCoins()
         {
             return this.coins;
         }
+        /// <summary>
+        /// Add coins form another wallet to current.
+        /// </summary>
+        /// <param name="anotherWallet">Another wallet</param>
         public void addWallet(Wallet anotherWallet)
         {
             var e = anotherWallet.coins.GetEnumerator();

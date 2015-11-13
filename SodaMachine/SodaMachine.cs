@@ -6,11 +6,30 @@ using System.Threading.Tasks;
 
 namespace SodaMachine
 {
+    /// <summary>
+    /// Represents soda machine
+    /// </summary>
     public class SodaMachine
     {
+        /// <summary>
+        /// Soda machinу wallet.
+        /// </summary>
         private Wallet wallet;
+        /// <summary>
+        /// Cup of soda price
+        /// </summary>
         public static int SODA_PRICE = 30;
+        /// <summary>
+        /// Current balance
+        /// </summary>
         public Wallet cuurentBalance;
+        /// <summary>
+        /// Initialises soda machine
+        /// </summary>
+        /// <param name="centCount">1 cent pcs</param>
+        /// <param name="cent5Count"><5 cent pcs</param>
+        /// <param name="cent25Count">25 cent pcs</param>
+        /// <param name="cent50Count">50 cent pcs</param>
         public SodaMachine(uint centCount, uint cent5Count, uint cent25Count, uint cent50Count)
         {
             wallet = new Wallet(centCount, cent5Count, cent25Count, cent50Count);
@@ -25,11 +44,17 @@ namespace SodaMachine
             str.Append(cuurentBalance.ToString() + "\n");
             return str.ToString();
         }
+        /// <summary>
+        /// Method inserts coin to machine
+        /// </summary>
+        /// <param name="nominal">coin nominal</param>
         public void insertCoin(uint nominal)
         {
             cuurentBalance.transfer(Transfer.Recieve, nominal);
         }
-
+        /// <summary>
+        /// Methods get soda for buyer.
+        /// </summary>
         public void getSoda()
         {
             if (cuurentBalance.hasAmount((uint)SODA_PRICE))
@@ -42,12 +67,22 @@ namespace SodaMachine
                 throw new Exception("Inserted coins are not enough for soda.");
             }
         }
+        
+        /// <summary>
+        /// Method get back coins from current balance.
+        /// </summary>
+        /// <returns></returns>
         public Wallet getChange()
         {
             int amount = cuurentBalance.getAmount();
             cuurentBalance = new Wallet();
             return getChange((uint)(amount));
         }
+        /// <summary>
+        /// Nethod get change represented by wallet.
+        /// </summary>
+        /// <param name="amount">Change amount</param>
+        /// <returns></returns>
         private Wallet getChange(uint amount)
         {
             if (amount > 0)
@@ -67,6 +102,11 @@ namespace SodaMachine
             else return new Wallet();
         }
 
+        /// <summary>
+        /// Method checks machine posibility to get change
+        /// </summary>
+        /// <param name="coins"></param>
+        /// <returns></returns>
         private bool haveChange(List<uint> coins)
         {
             Wallet w = new Wallet();
@@ -81,6 +121,11 @@ namespace SodaMachine
             }
             return true;
         }
+        /// <summary>
+        /// Method cheack possibility to pick up the change with a coin in the machine
+        /// </summary>
+        /// <param name="n">amount</param>
+        /// <returns></returns>
         private bool canGetChange(int n)
         {
             if (n < 1)
@@ -103,7 +148,12 @@ namespace SodaMachine
             }
             return false;
         }
-        public List<List<uint>> searchChangeVariants(uint n)
+        /// <summary>
+        /// Method serach all change variants 
+        /// </summary>
+        /// <param name="n">change amount</param>
+        /// <returns>list of all change variants</returns>
+        private List<List<uint>> searchChangeVariants(uint n)
         {
             List<List<uint>> list = new List<List<uint>>();
             if (this.wallet.getCoins().ContainsKey(n))

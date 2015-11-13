@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SodaMachine
 {
+    public enum Transfer {Sent, Recieve}
     /// <summary>
     /// Represents wallet
     /// </summary>
@@ -42,10 +43,40 @@ namespace SodaMachine
             }
             return (int)amount;
         }
-
+        /// <summary>
+        /// Method checks required amount.
+        /// </summary>
+        /// <param name="amount">Required amount</param>
+        /// <returns></returns>
         public bool hasAmount(uint amount)
         {
-            if (amount < +getAmount()) return true; else return false;
+            if (amount <=getAmount()) return true; else return false;
+        }
+
+        /// <summary>
+        /// Method transfers one coin
+        /// </summary>
+        /// <param name="transfer">Transfer type</param>
+        /// <param name="nominal">Coin nominal</param>
+        public void transfer(Transfer transfer, uint nominal)
+        {
+            if (transfer.Equals(Transfer.Recieve)) coins[nominal]++;
+            if (transfer.Equals(Transfer.Sent) && coins[nominal]>0) coins[nominal]--;
+        }
+        /// <summary>
+        /// Wallet string representation
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            str.Append("Amount : " + getAmount() + ". Coins:");
+            var e = coins.GetEnumerator();
+            while (e.MoveNext())
+            {
+                if(e.Current.Value>0)str.Append(" " + e.Current.Key + " cent " + e.Current.Value + " pcs;");
+            }
+            return str.ToString();
         }
     }
     

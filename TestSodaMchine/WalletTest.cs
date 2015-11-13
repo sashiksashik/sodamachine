@@ -17,5 +17,19 @@ namespace TestSodaMchine
             Wallet thirdWallet = new Wallet(0, 0, 0, 0);
             Assert.AreEqual(0, thirdWallet.getAmount());
         }
+
+        [TestMethod]
+        public void TransferAndHasAmount()
+        {
+            Wallet wallet = new Wallet(1, 0, 1, 1);
+            Assert.IsTrue(wallet.hasAmount(70));
+            wallet.transfer(Transfer.Recieve, 5);
+            Assert.AreEqual(81, wallet.getAmount());
+            Assert.IsTrue(wallet.hasAmount(81));
+            Assert.IsFalse(wallet.hasAmount(82));
+            wallet.transfer(Transfer.Sent, 50);
+            Assert.IsTrue(wallet.hasAmount(31));
+            Assert.IsFalse(wallet.hasAmount(32));
+        }
     }
 }

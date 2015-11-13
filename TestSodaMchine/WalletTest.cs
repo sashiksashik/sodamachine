@@ -31,5 +31,14 @@ namespace TestSodaMchine
             Assert.IsTrue(wallet.hasAmount(31));
             Assert.IsFalse(wallet.hasAmount(32));
         }
+
+        [TestMethod]
+        public void AddWallet()
+        {
+            Wallet wallet = new Wallet(1, 0, 1, 0);
+            Wallet anotherWallet = new Wallet(0, 1, 0, 1);
+            wallet.addWallet(anotherWallet);
+            Assert.AreEqual(81, wallet.getAmount());
+        }
     }
 }

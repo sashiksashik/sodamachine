@@ -6,14 +6,23 @@ using System.Threading.Tasks;
 
 namespace SodaMachine
 {
-    public enum Transfer {Sent, Recieve}
+    public enum Transfer { Sent, Recieve }
     /// <summary>
     /// Represents wallet
     /// </summary>
     public class Wallet
     {
 
-        private Dictionary<uint,uint> coins;
+        private Dictionary<uint, uint> coins;
+
+        public Wallet()
+        {
+            coins = new Dictionary<uint, uint>();
+            coins.Add(1, 0);
+            coins.Add(5, 0);
+            coins.Add(25, 0);
+            coins.Add(50, 0);
+        }
         /// <summary>
         /// Initialize wallet
         /// </summary>
@@ -39,7 +48,7 @@ namespace SodaMachine
             var enumerator = coins.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                amount+=enumerator.Current.Value*enumerator.Current.Key;
+                amount += enumerator.Current.Value * enumerator.Current.Key;
             }
             return (int)amount;
         }
@@ -50,7 +59,7 @@ namespace SodaMachine
         /// <returns></returns>
         public bool hasAmount(uint amount)
         {
-            if (amount <=getAmount()) return true; else return false;
+            if (amount <= getAmount()) return true; else return false;
         }
 
         /// <summary>
@@ -60,8 +69,12 @@ namespace SodaMachine
         /// <param name="nominal">Coin nominal</param>
         public void transfer(Transfer transfer, uint nominal)
         {
-            if (transfer.Equals(Transfer.Recieve)) coins[nominal]++;
-            if (transfer.Equals(Transfer.Sent) && coins[nominal]>0) coins[nominal]--;
+            if (coins.ContainsKey(nominal))
+            {
+                if (transfer.Equals(Transfer.Recieve)) coins[nominal]++;
+                if (transfer.Equals(Transfer.Sent) && coins[nominal] > 0) coins[nominal]--;
+            }
+            else throw new ArgumentException("There are not coin "+nominal+" cent in wallet.");
         }
         /// <summary>
         /// Wallet string representation
@@ -74,10 +87,24 @@ namespace SodaMachine
             var e = coins.GetEnumerator();
             while (e.MoveNext())
             {
-                if(e.Current.Value>0)str.Append(" " + e.Current.Key + " cent " + e.Current.Value + " pcs;");
+                if (e.Current.Value > 0) str.Append(" " + e.Current.Key + " cent " + e.Current.Value + " pcs;");
             }
             return str.ToString();
         }
+
+        public Dictionary<uint, uint> getCoins()
+        {
+            return this.coins;
+        }
+        public void addWallet(Wallet anotherWallet)
+        {
+            var e = anotherWallet.coins.GetEnumerator();
+            while (e.MoveNext())
+            {
+                uint numinal = e.Current.Key;
+                this.coins[numinal] += anotherWallet.coins[numinal];
+            }
+        }
     }
-    
+
 }
